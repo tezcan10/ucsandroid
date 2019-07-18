@@ -1,0 +1,50 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 29
+    buildToolsVersion "29.0.0"
+
+
+    defaultConfig {
+        multiDexEnabled true
+        minSdkVersion 26
+        targetSdkVersion 29
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    implementation 'androidx.appcompat:appcompat:1.0.2'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test:runner:1.2.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    api 'com.fasterxml.jackson.core:jackson-core:2.9.8'
+    api 'com.fasterxml.jackson.core:jackson-annotations:2.9.8'
+    api 'com.fasterxml.jackson.core:jackson-databind:2.9.8'
+    api 'org.simpleframework:simple-xml:2.7.1'
+    api group: 'com.j256.ormlite', name: 'ormlite-android', version: '5.1'
+    implementation group: 'commons-logging', name: 'commons-logging', version: '1.2'
+    implementation group: 'org.apache.xerces', name: 'com.springsource.org.apache.xerces', version: '2.9.1'
+
+    // https://mvnrepository.com/artifact/org.springframework.android/spring-android-rest-template
+
+}
