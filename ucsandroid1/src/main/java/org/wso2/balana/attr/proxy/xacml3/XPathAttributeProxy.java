@@ -1,21 +1,3 @@
-/*
-*  Copyright (c) WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
-*
-*  WSO2 Inc. licenses this file to you under the Apache License,
-*  Version 2.0 (the "License"); you may not use this file except
-*  in compliance with the License.
-*  You may obtain a copy of the License at
-*
-*    http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing,
-* software distributed under the License is distributed on an
-* "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-* KIND, either express or implied.  See the License for the
-* specific language governing permissions and limitations
-* under the License.
-*/
-
 package org.wso2.balana.attr.proxy.xacml3;
 
 import org.w3c.dom.Node;
@@ -23,21 +5,28 @@ import org.wso2.balana.attr.AttributeProxy;
 import org.wso2.balana.attr.AttributeValue;
 import org.wso2.balana.attr.xacml3.XPathAttribute;
 
-/**
- * proxy class that is provided mainly for the run-time configuration code to use.
- */
-public class XPathAttributeProxy implements AttributeProxy {
-
-    public AttributeValue getInstance(Node root) throws Exception {
-        return XPathAttribute.getInstance(root);
+public class XPathAttributeProxy
+  implements AttributeProxy
+{
+  public AttributeValue getInstance(Node root)
+    throws Exception
+  {
+    return XPathAttribute.getInstance(root);
+  }
+  
+  public AttributeValue getInstance(String value, String[] params)
+    throws Exception
+  {
+    String xPathCategory = null;
+    if (params != null) {
+      xPathCategory = params[0];
     }
-
-    public AttributeValue getInstance(String value, String[] params) throws Exception {
-        //only one parameter is needed which is called XPathcategory
-        String xPathCategory = null;
-        if(params != null){
-            xPathCategory = params[0];
-        }
-        return XPathAttribute.getInstance(value, xPathCategory);    
-    }
+    return XPathAttribute.getInstance(value, xPathCategory);
+  }
 }
+
+/* Location:
+ * Qualified Name:     org.wso2.balana.attr.proxy.xacml3.XPathAttributeProxy
+ * Java Class Version: 5 (49.0)
+ * JD-Core Version:    0.7.1
+ */

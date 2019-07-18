@@ -1,190 +1,176 @@
-/*
-*  Copyright (c) WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
-*
-*  WSO2 Inc. licenses this file to you under the Apache License,
-*  Version 2.0 (the "License"); you may not use this file except
-*  in compliance with the License.
-*  You may obtain a copy of the License at
-*
-*    http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing,
-* software distributed under the License is distributed on an
-* "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-* KIND, either express or implied.  See the License for the
-* specific language governing permissions and limitations
-* under the License.
-*/
-
 package org.wso2.balana.ctx;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.wso2.balana.Balana;
-import org.wso2.balana.ParsingException;
-import org.wso2.balana.XACMLConstants;
-import org.wso2.balana.ctx.xacml3.RequestCtx;
-import org.wso2.balana.utils.Utils;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.InputStream;
-import java.util.logging.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.w3c.dom.Node;
+import org.wso2.balana.ParsingException;
 
-/**
- * Factory that creates the AbstractRequestCtx
- */
-public class RequestCtxFactory {
-
-    /**
-     * Instance of this class
-     */
-    private static volatile RequestCtxFactory factoryInstance;
-
-    /**
-     *  the logger we'll use for all messages
-     */
-    private static Logger log = Logger.getLogger(RequestCtxFactory.class.getName());
-
-    /**
-     *  Returns instance of <code>AbstractRequestCtx</code> based one the XACML version.
-     *
-     * @param root  the node to parse for the <code>AbstractRequestCtx</code>
-     * @return <code>AbstractRequestCtx</code> object
-     * @throws org.wso2.balana.ParsingException  if the DOM node is invalid
-     */
-    public AbstractRequestCtx getRequestCtx(Node root) throws ParsingException {
-
-        String requestCtxNs = root.getNamespaceURI();
-
-        if(requestCtxNs != null){
-            if(XACMLConstants.REQUEST_CONTEXT_3_0_IDENTIFIER.equals(requestCtxNs.trim())){
-                return RequestCtx.getInstance(root);
-            } else if(XACMLConstants.REQUEST_CONTEXT_1_0_IDENTIFIER.equals(requestCtxNs.trim()) ||
-                    XACMLConstants.REQUEST_CONTEXT_2_0_IDENTIFIER.equals(requestCtxNs.trim())) {
-                return org.wso2.balana.ctx.xacml2.RequestCtx.getInstance(root);
-            } else {
-                throw new ParsingException("Invalid namespace in XACML request");
-            }
-        } else {
-            log.warning("No Namespace defined in XACML request and Assume as XACML 3.0");
-            return RequestCtx.getInstance(root);
-        }
+public class RequestCtxFactory
+{
+  private static volatile RequestCtxFactory factoryInstance;
+  private static Log log = LogFactory.getLog(RequestCtxFactory.class);
+  
+  public AbstractRequestCtx getRequestCtx(Node root)
+    throws ParsingException
+  {
+    String requestCtxNs = root.getNamespaceURI();
+    if (requestCtxNs != null)
+    {
+      if ("urn:oasis:names:tc:xacml:3.0:core:schema:wd-17".equals(requestCtxNs.trim())) {
+        return org.wso2.balana.ctx.xacml3.RequestCtx.getInstance(root);
+      }
+      if (("urn:oasis:names:tc:xacml:1.0:context".equals(requestCtxNs.trim())) || 
+        ("urn:oasis:names:tc:xacml:2.0:context:schema:os".equals(requestCtxNs.trim()))) {
+        return org.wso2.balana.ctx.xacml2.RequestCtx.getInstance(root);
+      }
+      throw new ParsingException("Invalid namespace in XACML request");
     }
-
-    /**
-     *  Returns instance of <code>AbstractRequestCtx</code> based one the XACML version.
-     *
-     * @param request  the String to parse for the <code>AbstractRequestCtx</code>
-     * @return <code>AbstractRequestCtx</code> object
-     * @throws ParsingException  if the request is invalid
-     */
-    public AbstractRequestCtx getRequestCtx(String request) throws ParsingException {
-
-        Node root = getXacmlRequest(request);
-        String requestCtxNs = root.getNamespaceURI();
-
-        if(requestCtxNs != null){
-            if(XACMLConstants.REQUEST_CONTEXT_3_0_IDENTIFIER.equals(requestCtxNs.trim())){
-                return RequestCtx.getInstance(root);
-            } else if(XACMLConstants.REQUEST_CONTEXT_1_0_IDENTIFIER.equals(requestCtxNs.trim()) ||
-                    XACMLConstants.REQUEST_CONTEXT_2_0_IDENTIFIER.equals(requestCtxNs.trim())) {
-                return org.wso2.balana.ctx.xacml2.RequestCtx.getInstance(root);
-            } else {
-                throw new ParsingException("Invalid namespace in XACML request");
-            }
-        } else {
-            log.warning("No Namespace defined in XACML request and Assume as XACML 3.0");
-            return RequestCtx.getInstance(root);
-        }
+    log.warn("No Namespace defined in XACML request and Assume as XACML 3.0");
+    return org.wso2.balana.ctx.xacml3.RequestCtx.getInstance(root);
+  }
+  
+  public AbstractRequestCtx getRequestCtx(String request)
+    throws ParsingException
+  {
+    Node root = getXacmlRequest(request);
+    String requestCtxNs = root.getNamespaceURI();
+    if (requestCtxNs != null)
+    {
+      if ("urn:oasis:names:tc:xacml:3.0:core:schema:wd-17".equals(requestCtxNs.trim())) {
+        return org.wso2.balana.ctx.xacml3.RequestCtx.getInstance(root);
+      }
+      if (("urn:oasis:names:tc:xacml:1.0:context".equals(requestCtxNs.trim())) || 
+        ("urn:oasis:names:tc:xacml:2.0:context:schema:os".equals(requestCtxNs.trim()))) {
+        return org.wso2.balana.ctx.xacml2.RequestCtx.getInstance(root);
+      }
+      throw new ParsingException("Invalid namespace in XACML request");
     }
-
-
-    /**
-     *  Returns instance of <code>AbstractRequestCtx</code> based one the XACML version.
-     *
-     * Creates a new <code>RequestCtx</code> by parsing XML from an input stream. Note that this a
-     * convenience method, and it will not do schema validation by default. You should be parsing
-     * the data yourself, and then providing the root node to the other <code>getInstance</code>
-     * method. If you use this convenience method, you probably want to turn on validation by
-     * setting the context schema file (see the programmer guide for more information on this).
-     *
-     * @param input input a stream providing the XML data
-     * @return <code>AbstractRequestCtx</code> object
-     * @throws ParsingException  if the DOM node is invalid
-     */
-    public AbstractRequestCtx getRequestCtx(InputStream input) throws ParsingException {
-
-        Node root  = InputParser.parseInput(input, "Request");
-        String requestCtxNs = root.getNamespaceURI();
-
-        if(requestCtxNs != null){
-            if(XACMLConstants.REQUEST_CONTEXT_3_0_IDENTIFIER.equals(requestCtxNs.trim())){
-                return RequestCtx.getInstance(root);
-            } else if(XACMLConstants.REQUEST_CONTEXT_1_0_IDENTIFIER.equals(requestCtxNs.trim()) ||
-                    XACMLConstants.REQUEST_CONTEXT_2_0_IDENTIFIER.equals(requestCtxNs.trim())) {
-                return org.wso2.balana.ctx.xacml2.RequestCtx.getInstance(root);
-            } else {
-                throw new ParsingException("Invalid namespace in XACML request");
-            }
-        } else {
-            log.warning("No Namespace defined in XACML request and Assume as XACML 3.0");
-            return RequestCtx.getInstance(root);
-        }
+    log.warn("No Namespace defined in XACML request and Assume as XACML 3.0");
+    return org.wso2.balana.ctx.xacml3.RequestCtx.getInstance(root);
+  }
+  
+  public AbstractRequestCtx getRequestCtx(InputStream input)
+    throws ParsingException
+  {
+    Node root = InputParser.parseInput(input, "Request");
+    String requestCtxNs = root.getNamespaceURI();
+    if (requestCtxNs != null)
+    {
+      if ("urn:oasis:names:tc:xacml:3.0:core:schema:wd-17".equals(requestCtxNs.trim())) {
+        return org.wso2.balana.ctx.xacml3.RequestCtx.getInstance(root);
+      }
+      if (("urn:oasis:names:tc:xacml:1.0:context".equals(requestCtxNs.trim())) || 
+        ("urn:oasis:names:tc:xacml:2.0:context:schema:os".equals(requestCtxNs.trim()))) {
+        return org.wso2.balana.ctx.xacml2.RequestCtx.getInstance(root);
+      }
+      throw new ParsingException("Invalid namespace in XACML request");
     }
-
-
-    /**
-     * Returns an instance of this factory. This method enforces a singleton model, meaning that
-     * this always returns the same instance, creating the factory if it hasn't been requested
-     * before.
-    *
-     * @return the factory instance
-     */
-    public static RequestCtxFactory getFactory() {
+    log.warn("No Namespace defined in XACML request and Assume as XACML 3.0");
+    return org.wso2.balana.ctx.xacml3.RequestCtx.getInstance(root);
+  }
+  
+  public static RequestCtxFactory getFactory()
+  {
+    if (factoryInstance == null) {
+      synchronized (RequestCtxFactory.class)
+      {
         if (factoryInstance == null) {
-            synchronized (RequestCtxFactory.class) {
-                if (factoryInstance == null) {
-                    factoryInstance = new RequestCtxFactory();
-                }
-            }
+          factoryInstance = new RequestCtxFactory();
         }
-
-        return factoryInstance;
+      }
     }
-
-
-    /**
-     * Creates DOM representation of the XACML request
-     *
-     * @param request  XACML request as a String object
-     * @return  XACML request as a DOM element
-     * @throws ParsingException throws, if fails
-     */
-    public Element getXacmlRequest(String request) throws ParsingException {
-
-        ByteArrayInputStream inputStream = new ByteArrayInputStream(request.getBytes());
-        DocumentBuilderFactory  builder = Utils.getSecuredDocumentBuilderFactory();
-        if(builder == null){
-            throw  new ParsingException("DOM Builder can not be null");
-        }
-
-        Document doc;
-        try {
-            doc = builder.newDocumentBuilder().parse(inputStream);
-        } catch (Exception e) {
-            throw new ParsingException("DOM of request element can not be created from String", e);
-        } finally {
-            try {
-                inputStream.close();
-            } catch (IOException e) {
-                    log.severe("Error in closing input stream of XACML request");
-            }
-        }
-
-        return doc.getDocumentElement();
-    }
+    return factoryInstance;
+  }
+  
+  /* Error */
+  public org.w3c.dom.Element getXacmlRequest(String request)
+    throws ParsingException
+  {
+    // Byte code:
+    //   0: new 102	java/io/ByteArrayInputStream
+    //   3: dup
+    //   4: aload_1
+    //   5: invokevirtual 104	java/lang/String:getBytes	()[B
+    //   8: invokespecial 108	java/io/ByteArrayInputStream:<init>	([B)V
+    //   11: astore_2
+    //   12: invokestatic 111	javax/xml/parsers/DocumentBuilderFactory:newInstance	()Ljavax/xml/parsers/DocumentBuilderFactory;
+    //   15: astore_3
+    //   16: aload_3
+    //   17: iconst_1
+    //   18: invokevirtual 117	javax/xml/parsers/DocumentBuilderFactory:setNamespaceAware	(Z)V
+    //   21: aload_3
+    //   22: invokevirtual 121	javax/xml/parsers/DocumentBuilderFactory:newDocumentBuilder	()Ljavax/xml/parsers/DocumentBuilder;
+    //   25: aload_2
+    //   26: invokevirtual 125	javax/xml/parsers/DocumentBuilder:parse	(Ljava/io/InputStream;)Lorg/w3c/dom/Document;
+    //   29: astore 4
+    //   31: goto +39 -> 70
+    //   34: astore 5
+    //   36: new 29	org/wso2/balana/ParsingException
+    //   39: dup
+    //   40: ldc -125
+    //   42: invokespecial 65	org/wso2/balana/ParsingException:<init>	(Ljava/lang/String;)V
+    //   45: athrow
+    //   46: astore 6
+    //   48: aload_2
+    //   49: invokevirtual 133	java/io/ByteArrayInputStream:close	()V
+    //   52: goto +15 -> 67
+    //   55: astore 7
+    //   57: getstatic 18	org/wso2/balana/ctx/RequestCtxFactory:log	Lorg/apache/commons/logging/Log;
+    //   60: ldc -120
+    //   62: invokeinterface 138 2 0
+    //   67: aload 6
+    //   69: athrow
+    //   70: aload_2
+    //   71: invokevirtual 133	java/io/ByteArrayInputStream:close	()V
+    //   74: goto +15 -> 89
+    //   77: astore 7
+    //   79: getstatic 18	org/wso2/balana/ctx/RequestCtxFactory:log	Lorg/apache/commons/logging/Log;
+    //   82: ldc -120
+    //   84: invokeinterface 138 2 0
+    //   89: aload 4
+    //   91: invokeinterface 141 1 0
+    //   96: areturn
+    // Line number table:
+    //   Java source line #171	-> byte code offset #0
+    //   Java source line #172	-> byte code offset #12
+    //   Java source line #173	-> byte code offset #16
+    //   Java source line #176	-> byte code offset #21
+    //   Java source line #177	-> byte code offset #31
+    //   Java source line #178	-> byte code offset #36
+    //   Java source line #179	-> byte code offset #46
+    //   Java source line #181	-> byte code offset #48
+    //   Java source line #182	-> byte code offset #52
+    //   Java source line #183	-> byte code offset #57
+    //   Java source line #185	-> byte code offset #67
+    //   Java source line #181	-> byte code offset #70
+    //   Java source line #182	-> byte code offset #74
+    //   Java source line #183	-> byte code offset #79
+    //   Java source line #186	-> byte code offset #89
+    // Local variable table:
+    //   start	length	slot	name	signature
+    //   0	97	0	this	RequestCtxFactory
+    //   0	97	1	request	String
+    //   11	60	2	inputStream	java.io.ByteArrayInputStream
+    //   15	7	3	dbf	javax.xml.parsers.DocumentBuilderFactory
+    //   29	3	4	doc	org.w3c.dom.Document
+    //   70	1	4	doc	org.w3c.dom.Document
+    //   89	1	4	doc	org.w3c.dom.Document
+    //   34	3	5	e	Exception
+    //   46	22	6	localObject	Object
+    //   55	3	7	e	java.io.IOException
+    //   77	3	7	e	java.io.IOException
+    // Exception table:
+    //   from	to	target	type
+    //   21	31	34	java/lang/Exception
+    //   21	46	46	finally
+    //   48	52	55	java/io/IOException
+    //   70	74	77	java/io/IOException
+  }
 }
+
+/* Location:
+ * Qualified Name:     org.wso2.balana.ctx.RequestCtxFactory
+ * Java Class Version: 5 (49.0)
+ * JD-Core Version:    0.7.1
+ */
