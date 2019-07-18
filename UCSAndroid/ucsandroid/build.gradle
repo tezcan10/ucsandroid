@@ -1,0 +1,47 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 29
+    buildToolsVersion "29.0.0"
+
+
+    defaultConfig {
+        multiDexEnabled true
+        minSdkVersion 26
+        targetSdkVersion 29
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+}
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation 'androidx.appcompat:appcompat:1.0.2'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test:runner:1.2.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    api 'com.fasterxml.jackson.core:jackson-core:2.9.8'
+    api 'com.fasterxml.jackson.core:jackson-annotations:2.9.8'
+    api 'com.fasterxml.jackson.core:jackson-databind:2.9.8'
+    api 'org.simpleframework:simple-xml:2.7.1'
+    api 'com.j256.ormlite:ormlite-android:5.1'
+    implementation 'commons-logging:commons-logging:1.2'
+    implementation 'org.apache.xerces:com.springsource.org.apache.xerces:2.9.1'
+    // https://mvnrepository.com/artifact/org.springframework.android/spring-android-rest-template
+}
