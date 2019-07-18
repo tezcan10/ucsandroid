@@ -3,7 +3,7 @@
  *  CHANGED by CNR-IIT : THIS SHOULD BE MOVED TO PDP (CORE)
  */
 
-package com.huawei.smarthome.testapplication.pdp;
+package com.huawei.smarthome.pdp;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

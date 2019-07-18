@@ -34,7 +34,7 @@
  * the design, construction, operation or maintenance of any nuclear facility.
  */
 
-package com.huawei.smarthome.testapplication.pdp;
+package com.huawei.smarthome.pdp;
 
 
 import org.wso2.balana.AbstractPolicy;
