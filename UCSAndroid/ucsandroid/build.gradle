@@ -42,6 +42,6 @@ dependencies {
     api 'org.simpleframework:simple-xml:2.7.1'
     api 'com.j256.ormlite:ormlite-android:5.1'
     implementation 'commons-logging:commons-logging:1.2'
-    implementation 'org.apache.xerces:com.springsource.org.apache.xerces:2.9.1'
+    //implementation 'org.apache.xerces:com.springsource.org.apache.xerces:2.9.1'
     // https://mvnrepository.com/artifact/org.springframework.android/spring-android-rest-template
 }
