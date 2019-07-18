@@ -69,22 +69,22 @@ public class AddFunction
       result = new EvaluationResult(new IntegerAttribute(sum));
       break;
     case 1: 
-      double sum = 0.0D;
+      double sum1 = 0.0D;
       for (int index = 0; index < argValues.length; index++)
       {
         double arg = ((DoubleAttribute)argValues[index]).getValue();
-        sum += arg;
+        sum1 += arg;
       }
-      double lower = Math.floor(sum);
+      double lower = Math.floor(sum1);
       double higher = lower + 1.0D;
-      if (sum - lower == higher - sum) {
+      if (sum1 - lower == higher - sum1) {
         if (lower % 2.0D == 0.0D) {
-          sum = lower;
+          sum1 = lower;
         } else {
-          sum = higher;
+          sum1 = higher;
         }
       }
-      result = new EvaluationResult(new DoubleAttribute(sum));
+      result = new EvaluationResult(new DoubleAttribute(sum1));
     }
     return result;
   }

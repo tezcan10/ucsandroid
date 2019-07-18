@@ -36,28 +36,26 @@ public class ObligationExpression
         root.getNodeName());
     }
     NamedNodeMap nodeAttributes = root.getAttributes();
+    URI obligationId;
+    String effect;
     try
     {
       obligationId = new URI(nodeAttributes.getNamedItem("ObligationId").getNodeValue());
     }
     catch (Exception e)
     {
-      URI obligationId;
       throw new ParsingException("Error parsing required ObligationId in ObligationExpressionType", 
         e);
     }
-    URI obligationId;
     try
     {
       effect = nodeAttributes.getNamedItem("FulfillOn").getNodeValue();
     }
     catch (Exception e)
     {
-      String effect;
       throw new ParsingException("Error parsing required FulfillOn in ObligationExpressionType", 
         e);
     }
-    String effect;
     int fulfillOn;
     if ("Permit".equals(effect))
     {
@@ -65,14 +63,12 @@ public class ObligationExpression
     }
     else
     {
-      int fulfillOn;
       if ("Deny".equals(effect)) {
         fulfillOn = 1;
       } else {
         throw new ParsingException("Invalid FulfillOn : " + effect);
       }
     }
-    int fulfillOn;
     NodeList children = root.getChildNodes();
     for (int i = 0; i < children.getLength(); i++)
     {

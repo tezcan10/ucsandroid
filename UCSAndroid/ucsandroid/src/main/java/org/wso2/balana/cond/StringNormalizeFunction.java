@@ -70,11 +70,11 @@ public class StringNormalizeFunction
       result = new EvaluationResult(new StringAttribute(strResult));
       break;
     case 1: 
-      String str = ((StringAttribute)argValues[0]).getValue();
+      String string = ((StringAttribute)argValues[0]).getValue();
       
-      String strResult = str.toLowerCase();
+      String stringResult = string.toLowerCase();
       
-      result = new EvaluationResult(new StringAttribute(strResult));
+      result = new EvaluationResult(new StringAttribute(stringResult));
     }
     return result;
   }

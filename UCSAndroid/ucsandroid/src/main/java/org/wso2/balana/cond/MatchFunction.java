@@ -162,64 +162,64 @@ public class MatchFunction
       }
       break;
     case 1: 
-      X500Principal arg0 = ((X500NameAttribute)argValues[0]).getValue();
-      X500Principal arg1 = ((X500NameAttribute)argValues[1]).getValue();
+      X500Principal principal = ((X500NameAttribute)argValues[0]).getValue();
+      X500Principal principal1 = ((X500NameAttribute)argValues[1]).getValue();
       
-      boolResult = arg1.getName("CANONICAL").endsWith(
-        arg0.getName("CANONICAL"));
+      boolResult = principal1.getName("CANONICAL").endsWith(
+        principal.getName("CANONICAL"));
       
       break;
     case 2: 
-      String arg0 = ((StringAttribute)argValues[0]).getValue();
-      String arg1 = ((RFC822NameAttribute)argValues[1]).getValue();
-      if (arg0.indexOf('@') != -1)
+      String string = ((StringAttribute)argValues[0]).getValue();
+      String string1 = ((RFC822NameAttribute)argValues[1]).getValue();
+      if (string.indexOf('@') != -1)
       {
-        String normalized = new RFC822NameAttribute(arg0).getValue();
-        boolResult = normalized.equals(arg1);
+        String normalized = new RFC822NameAttribute(string).getValue();
+        boolResult = normalized.equals(string1);
       }
-      else if (arg0.charAt(0) == '.')
+      else if (string.charAt(0) == '.')
       {
-        boolResult = arg1.endsWith(arg0.toLowerCase());
+        boolResult = string1.endsWith(string.toLowerCase());
       }
       else
       {
-        String mailDomain = arg1.substring(arg1.indexOf('@') + 1);
-        boolResult = arg0.toLowerCase().equals(mailDomain);
+        String mailDomain = string1.substring(string1.indexOf('@') + 1);
+        boolResult = string.toLowerCase().equals(mailDomain);
       }
       break;
     case 4: 
-      String arg0 = ((StringAttribute)argValues[0]).getValue();
-      String arg1 = ((AnyURIAttribute)argValues[1]).encode();
+      String string2 = ((StringAttribute)argValues[0]).getValue();
+      String string3 = ((AnyURIAttribute)argValues[1]).encode();
       
-      boolResult = regexpHelper(arg0, arg1);
+      boolResult = regexpHelper(string2, string3);
       
       break;
     case 5: 
-      String arg0 = ((StringAttribute)argValues[0]).getValue();
-      String arg1 = ((IPAddressAttribute)argValues[1]).encode();
+      String string4 = ((StringAttribute)argValues[0]).getValue();
+      String string5 = ((IPAddressAttribute)argValues[1]).encode();
       
-      boolResult = regexpHelper(arg0, arg1);
+      boolResult = regexpHelper(string4, string5);
       
       break;
     case 6: 
-      String arg0 = ((StringAttribute)argValues[0]).getValue();
-      String arg1 = ((DNSNameAttribute)argValues[1]).encode();
+      String string6 = ((StringAttribute)argValues[0]).getValue();
+      String string7 = ((DNSNameAttribute)argValues[1]).encode();
       
-      boolResult = regexpHelper(arg0, arg1);
+      boolResult = regexpHelper(string6, string7);
       
       break;
     case 7: 
-      String arg0 = ((StringAttribute)argValues[0]).getValue();
-      String arg1 = ((RFC822NameAttribute)argValues[1]).encode();
+      String string8 = ((StringAttribute)argValues[0]).getValue();
+      String string9 = ((RFC822NameAttribute)argValues[1]).encode();
       
-      boolResult = regexpHelper(arg0, arg1);
+      boolResult = regexpHelper(string8, string9);
       
       break;
     case 8: 
-      String arg0 = ((StringAttribute)argValues[0]).getValue();
-      String arg1 = ((X500NameAttribute)argValues[1]).encode();
+      String string10 = ((StringAttribute)argValues[0]).getValue();
+      String string11 = ((X500NameAttribute)argValues[1]).encode();
       
-      boolResult = regexpHelper(arg0, arg1);
+      boolResult = regexpHelper(string10, string11);
     }
     return EvaluationResult.getInstance(boolResult);
   }

@@ -6,104 +6,86 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-public class BagAttribute
-  extends AttributeValue
-{
+public class BagAttribute extends AttributeValue {
   private Collection bag;
-  
-  public BagAttribute(URI type, Collection bag)
-  {
+
+  public BagAttribute(URI type, Collection bag) {
     super(type);
     if (type == null) {
       throw new IllegalArgumentException("Bags require a non-null type be provided");
-    }
-    if ((bag == null) || (bag.size() == 0))
-    {
-      this.bag = new ArrayList();
-    }
-    else
-    {
-      Iterator it = bag.iterator();
-      while (it.hasNext())
-      {
-        AttributeValue attr = (AttributeValue)it.next();
-        if (attr.isBag()) {
-          throw new IllegalArgumentException("bags cannot contain other bags");
+    } else {
+      if (bag != null && bag.size() != 0) {
+        Iterator it = bag.iterator();
+
+        while(it.hasNext()) {
+          AttributeValue attr = (AttributeValue)it.next();
+          if (attr.isBag()) {
+            throw new IllegalArgumentException("bags cannot contain other bags");
+          }
+
+          if (!type.equals(attr.getType())) {
+            throw new IllegalArgumentException("Bag items must all be of the same type");
+          }
         }
-        if (!type.equals(attr.getType())) {
-          throw new IllegalArgumentException("Bag items must all be of the same type");
-        }
+
+        this.bag = bag;
+      } else {
+        this.bag = new ArrayList();
       }
-      this.bag = bag;
+
     }
   }
-  
-  public boolean isBag()
-  {
+
+  public boolean isBag() {
     return true;
   }
-  
-  public static BagAttribute createEmptyBag(URI type)
-  {
-    return new BagAttribute(type, null);
+
+  public static BagAttribute createEmptyBag(URI type) {
+    return new BagAttribute(type, (Collection)null);
   }
-  
-  public boolean isEmpty()
-  {
-    return bag.size() == 0;
+
+  public boolean isEmpty() {
+    return this.bag.size() == 0;
   }
-  
-  public int size()
-  {
-    return bag.size();
+
+  public int size() {
+    return this.bag.size();
   }
-  
-  public boolean contains(AttributeValue value)
-  {
-    return bag.contains(value);
+
+  public boolean contains(AttributeValue value) {
+    return this.bag.contains(value);
   }
-  
-  public boolean containsAll(BagAttribute bag)
-  {
-    return this.bag.containsAll(bag);
+
+  public boolean containsAll(BagAttribute bag) {
+    return this.bag.containsAll(bag.bag);
   }
-  
-  public Iterator iterator()
-  {
-    return new ImmutableIterator(bag.iterator());
+
+  public Iterator iterator() {
+    return new BagAttribute.ImmutableIterator(this.bag.iterator());
   }
-  
-  private static class ImmutableIterator
-    implements Iterator
-  {
+
+  public String encode() {
+    throw new UnsupportedOperationException("Bags cannot be encoded");
+  }
+
+  private static class ImmutableIterator implements Iterator {
     private Iterator iterator;
-    
-    public ImmutableIterator(Iterator iterator)
-    {
+
+    public ImmutableIterator(Iterator iterator) {
       this.iterator = iterator;
     }
-    
-    public boolean hasNext()
-    {
-      return iterator.hasNext();
+
+    public boolean hasNext() {
+      return this.iterator.hasNext();
     }
-    
-    public Object next()
-      throws NoSuchElementException
-    {
-      return iterator.next();
+
+    public Object next() throws NoSuchElementException {
+      return this.iterator.next();
     }
-    
-    public void remove()
-      throws UnsupportedOperationException
-    {
+
+    public void remove() throws UnsupportedOperationException {
       throw new UnsupportedOperationException();
     }
-  }
-  
-  public String encode()
-  {
-    throw new UnsupportedOperationException("Bags cannot be encoded");
   }
 }
 

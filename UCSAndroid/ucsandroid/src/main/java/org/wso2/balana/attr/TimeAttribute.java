@@ -147,31 +147,33 @@ public class TimeAttribute
     
     return hashCode;
   }
-  
-  public String toString()
-  {
+
+  public String toString() {
     StringBuffer sb = new StringBuffer();
     sb.append("TimeAttribute: [\n");
-    
-    long secsGMT = timeGMT / 1000L;
-    long minsGMT = secsGMT / 60L;
-    secsGMT %= 60L;
-    long hoursGMT = minsGMT / 60L;
-    minsGMT %= 60L;
-    
-    String hoursStr = hoursGMT;
-    String minsStr = minsGMT;
-    String secsStr = secsGMT;
-    
+
+    // calculate the GMT value of this time
+    long secsGMT = timeGMT / 1000;
+    long minsGMT = secsGMT / 60;
+    secsGMT = secsGMT % 60;
+    long hoursGMT = minsGMT / 60;
+    minsGMT = minsGMT % 60;
+
+    // put the right number of zeros in place
+    String hoursStr = (hoursGMT < 10) ? "0" + hoursGMT : "" + hoursGMT;
+    String minsStr = (minsGMT < 10) ? "0" + minsGMT : "" + minsGMT;
+    String secsStr = (secsGMT < 10) ? "0" + secsGMT : "" + secsGMT;
+
     sb.append("  Time GMT: " + hoursStr + ":" + minsStr + ":" + secsStr);
     sb.append("  Nanoseconds: " + nanoseconds);
     sb.append("  TimeZone: " + timeZone);
     sb.append("  Defaulted TimeZone: " + defaultedTimeZone);
     sb.append("]");
-    
+
     return sb.toString();
   }
-  
+
+
   public String encode()
   {
     if (encodedValue != null) {

@@ -27,169 +27,162 @@ import org.wso2.balana.finder.AttributeFinderModule;
 public class SelectorModule
   extends AttributeFinderModule
 {
-  public boolean isSelectorSupported()
-  {
-    return true;
-  }
-
-  public EvaluationResult findAttribute(String contextPath, URI attributeType, String contextSelector, Node root, EvaluationCtx context, String xpathVersion)
-  {
-    Node contextNode = null;
-    if (root == null)
-    {
-      contextNode = context.getRequestRoot();
+    public SelectorModule() {
     }
-    else if (contextSelector != null)
-    {
-      String namespace = root.getNamespaceURI();
 
-      XPathFactory factory = XPathFactory.newInstance();
-      XPath xpath = factory.newXPath();
-      if (namespace != null)
-      {
-        NamedNodeMap namedNodeMap = root.getAttributes();
-        String prefix = "ns";
-        String nodeName = null;
-        for (int i = 0; i < namedNodeMap.getLength(); i++)
-        {
-          Node n = namedNodeMap.item(i);
-          if (n.getNodeValue().equals(namespace))
-          {
-            nodeName = n.getNodeName();
+    public boolean isSelectorSupported() {
+      return true;
+    }
 
-            break;
+    public EvaluationResult findAttribute(String contextPath, URI attributeType, String contextSelector, Node root, EvaluationCtx context, String xpathVersion) {
+      Node contextNode = null;
+      DefaultNamespaceContext namespaceContext;
+      String namespace;
+      XPathFactory factory;
+      XPath xpath;
+      NamedNodeMap namedNodeMap;
+      String prefix;
+      String nodeName;
+      int i;
+      Node text;
+      ArrayList list;
+      if (root == null) {
+        contextNode = context.getRequestRoot();
+      } else if (contextSelector != null) {
+        namespace = root.getNamespaceURI();
+        factory = XPathFactory.newInstance();
+        xpath = factory.newXPath();
+        if (namespace != null) {
+          namedNodeMap = root.getAttributes();
+          prefix = "ns";
+          nodeName = null;
+
+          for(i = 0; i < namedNodeMap.getLength(); ++i) {
+            text = namedNodeMap.item(i);
+            if (text.getNodeValue().equals(namespace)) {
+              nodeName = text.getNodeName();
+              break;
+            }
           }
-        }
-        if (nodeName != null)
-        {
-          int pos = nodeName.indexOf(':');
-          if (pos != -1) {
-            prefix = nodeName.substring(pos + 1);
+
+          if (nodeName != null) {
+            i = nodeName.indexOf(58);
+            if (i != -1) {
+              prefix = nodeName.substring(i + 1);
+            } else {
+              contextSelector = Utils.prepareXPathForDefaultNs(contextSelector);
+            }
           } else {
             contextSelector = Utils.prepareXPathForDefaultNs(contextSelector);
           }
-        }
-        else
-        {
-          contextSelector = Utils.prepareXPathForDefaultNs(contextSelector);
-        }
-        NamespaceContext namespaceContext = new DefaultNamespaceContext(prefix, namespace);
 
-        xpath.setNamespaceContext(namespaceContext);
-      }
-      try
-      {
-        XPathExpression expression = xpath.compile(contextSelector);
-        NodeList result = (NodeList)expression.evaluate(root, XPathConstants.NODESET);
-        if (result == null) {
-          throw new Exception("No node is found from context selector id evaluation");
+          namespaceContext = new DefaultNamespaceContext(prefix, namespace);
+          xpath.setNamespaceContext(namespaceContext);
         }
-        if (result.getLength() == 1) {
-          break label308;
+
+        try {
+          XPathExpression expression = xpath.compile(contextSelector);
+          NodeList result = (NodeList)expression.evaluate(root, XPathConstants.NODESET);
+          if (result == null) {
+            throw new Exception("No node is found from context selector id evaluation");
+          }
+
+          if (result.getLength() != 1) {
+            throw new Exception("More than one node is found from context selector id evaluation");
+          }
+        } catch (Exception var19) {
+          list = new ArrayList();
+          list.add("urn:oasis:names:tc:xacml:1.0:status:syntax-error");
+          Status status = new Status(list, var19.getMessage());
+          return new EvaluationResult(status);
         }
-        throw new Exception("More than one node is found from context selector id evaluation");
+      } else {
+        contextNode = root;
       }
-      catch (Exception e)
-      {
-        List<String> codes = new ArrayList();
-        codes.add("urn:oasis:names:tc:xacml:1.0:status:syntax-error");
-        Status status = new Status(codes, e.getMessage());
-        return new EvaluationResult(status);
+
+      namespace = null;
+      if (contextNode != null) {
+        namespace = contextNode.getNamespaceURI();
       }
-    }
-    else
-    {
-      contextNode = root;
-    }
-    label308:
-    String namespace = null;
-    if (contextNode != null) {
-      namespace = contextNode.getNamespaceURI();
-    }
-    XPathFactory factory = XPathFactory.newInstance();
-    XPath xpath = factory.newXPath();
-    if (namespace != null)
-    {
-      NamedNodeMap namedNodeMap = contextNode.getAttributes();
-      String prefix = "ns";
-      String nodeName = null;
-      for (int i = 0; i < namedNodeMap.getLength(); i++)
-      {
-        Node n = namedNodeMap.item(i);
-        if (n.getNodeValue().equals(namespace))
-        {
-          nodeName = n.getNodeName();
-          break;
+
+      factory = XPathFactory.newInstance();
+      xpath = factory.newXPath();
+      if (namespace != null) {
+        namedNodeMap = contextNode.getAttributes();
+        prefix = "ns";
+        nodeName = null;
+
+        for(i = 0; i < namedNodeMap.getLength(); ++i) {
+          text = namedNodeMap.item(i);
+          if (text.getNodeValue().equals(namespace)) {
+            nodeName = text.getNodeName();
+            break;
+          }
         }
-      }
-      if (nodeName != null)
-      {
-        int pos = nodeName.indexOf(':');
-        if (pos != -1) {
-          prefix = nodeName.substring(pos + 1);
+
+        if (nodeName != null) {
+          i = nodeName.indexOf(58);
+          if (i != -1) {
+            prefix = nodeName.substring(i + 1);
+          } else {
+            contextPath = Utils.prepareXPathForDefaultNs(contextPath);
+          }
         } else {
           contextPath = Utils.prepareXPathForDefaultNs(contextPath);
         }
-      }
-      else
-      {
-        contextPath = Utils.prepareXPathForDefaultNs(contextPath);
-      }
-      NamespaceContext namespaceContext = new DefaultNamespaceContext(prefix, namespace);
 
-      xpath.setNamespaceContext(namespaceContext);
-    }
-    try
-    {
-      XPathExpression expression = xpath.compile(contextPath);
-      NodeList matches = (NodeList)expression.evaluate(contextNode, XPathConstants.NODESET);
-      if ((matches == null) || (matches.getLength() < 1)) {
-        throw new Exception("No node is found from xpath evaluation");
+        namespaceContext = new DefaultNamespaceContext(prefix, namespace);
+        xpath.setNamespaceContext(namespaceContext);
       }
-    }
-    catch (Exception e)
-    {
-      List<String> codes = new ArrayList();
-      codes.add("urn:oasis:names:tc:xacml:1.0:status:syntax-error");
-      Status status = new Status(codes, e.getMessage());
-      return new EvaluationResult(status);
-    }
-    NodeList matches;
-    if (matches.getLength() == 0) {
-      return new EvaluationResult(BagAttribute.createEmptyBag(attributeType));
-    }
-    try
-    {
-      ArrayList<AttributeValue> list = new ArrayList();
-      AttributeFactory attrFactory = Balana.getInstance().getAttributeFactory();
-      for (int i = 0; i < matches.getLength(); i++)
-      {
-        String text = null;
-        Node node = matches.item(i);
-        short nodeType = node.getNodeType();
-        if ((nodeType == 4) || (nodeType == 8) ||
-          (nodeType == 3) || (nodeType == 2)) {
-          text = node.getNodeValue();
-        } else {
-          text = node.getFirstChild().getNodeValue();
+
+      NodeList matches;
+      ArrayList code;
+      try {
+        XPathExpression expression = xpath.compile(contextPath);
+        matches = (NodeList)expression.evaluate(contextNode, XPathConstants.NODESET);
+        if (matches == null || matches.getLength() < 1) {
+          throw new Exception("No node is found from xpath evaluation");
         }
-        list.add(attrFactory.createValue(attributeType, text));
+      } catch (Exception var22) {
+        code = new ArrayList();
+        code.add("urn:oasis:names:tc:xacml:1.0:status:syntax-error");
+        Status status = new Status(code, var22.getMessage());
+        return new EvaluationResult(status);
       }
-      return new EvaluationResult(new BagAttribute(attributeType, list));
+
+      if (matches.getLength() == 0) {
+        return new EvaluationResult(BagAttribute.createEmptyBag(attributeType));
+      } else {
+        try {
+          list = new ArrayList();
+          AttributeFactory attrFactory = Balana.getInstance().getAttributeFactory();
+
+          for(i = 0; i < matches.getLength(); ++i) {
+            text = null;
+            Node node = matches.item(i);
+            short nodeType = node.getNodeType();
+            String text1;
+            if (nodeType != 4 && nodeType != 8 && nodeType != 3 && nodeType != 2) {
+              text1 = node.getFirstChild().getNodeValue();
+            } else {
+              text1 = node.getNodeValue();
+            }
+
+            list.add(attrFactory.createValue(attributeType, text1));
+          }
+
+          return new EvaluationResult(new BagAttribute(attributeType, list));
+        } catch (ParsingException var20) {
+          code = new ArrayList();
+          code.add("urn:oasis:names:tc:xacml:1.0:status:processing-error");
+          return new EvaluationResult(new Status(code, var20.getMessage()));
+        } catch (UnknownIdentifierException var21) {
+          code = new ArrayList();
+          code.add("urn:oasis:names:tc:xacml:1.0:status:processing-error");
+          return new EvaluationResult(new Status(code, "Unknown attribute type : " + attributeType));
+        }
+      }
     }
-    catch (ParsingException pe)
-    {
-      ArrayList<String> code = new ArrayList();
-      code.add("urn:oasis:names:tc:xacml:1.0:status:processing-error");
-      return new EvaluationResult(new Status(code, pe.getMessage()));
-    }
-    catch (UnknownIdentifierException uie)
-    {
-      ArrayList<String> code = new ArrayList();
-      code.add("urn:oasis:names:tc:xacml:1.0:status:processing-error");
-      return new EvaluationResult(new Status(code, "Unknown attribute type : " + attributeType));
-    }
-  }
 }
 
 /* Location:

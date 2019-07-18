@@ -67,11 +67,11 @@ public class SubtractFunction
       result = new EvaluationResult(new IntegerAttribute(difference));
       break;
     case 1: 
-      double arg0 = ((DoubleAttribute)argValues[0]).getValue();
-      double arg1 = ((DoubleAttribute)argValues[1]).getValue();
-      double difference = arg0 - arg1;
+      double double0 = ((DoubleAttribute)argValues[0]).getValue();
+      double double1 = ((DoubleAttribute)argValues[1]).getValue();
+      double difference1 = double0 - double1;
       
-      result = new EvaluationResult(new DoubleAttribute(difference));
+      result = new EvaluationResult(new DoubleAttribute(difference1));
     }
     return result;
   }

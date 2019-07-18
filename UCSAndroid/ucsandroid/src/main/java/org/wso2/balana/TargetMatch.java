@@ -82,6 +82,7 @@ public class TargetMatch
     
     String funcName = root.getAttributes().getNamedItem("MatchId").getNodeValue();
     FunctionFactory factory = FunctionFactory.getTargetInstance();
+    Function function;
     try
     {
       URI funcId = new URI(funcName);
@@ -89,7 +90,7 @@ public class TargetMatch
     }
     catch (URISyntaxException use)
     {
-      Function function;
+
       throw new ParsingException("Error parsing TargetMatch", use);
     }
     catch (UnknownIdentifierException uie)
@@ -105,11 +106,9 @@ public class TargetMatch
       }
       catch (Exception e)
       {
-        Function function;
         throw new ParsingException("invalid abstract function", e);
       }
     }
-    Function function;
     NodeList nodes = root.getChildNodes();
     for (int i = 0; i < nodes.getLength(); i++)
     {

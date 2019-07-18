@@ -10,7 +10,7 @@ public abstract class BagFunction
   public static final String NAME_BASE_BAG_SIZE = "-bag-size";
   public static final String NAME_BASE_IS_IN = "-is-in";
   public static final String NAME_BASE_BAG = "-bag";
-  private static final boolean[] bagParams = { falsetrue };
+  private static final boolean[] bagParams = { false, true };
   protected static String[] baseTypes = { "http://www.w3.org/2001/XMLSchema#string", 
     "http://www.w3.org/2001/XMLSchema#boolean", "http://www.w3.org/2001/XMLSchema#integer", "http://www.w3.org/2001/XMLSchema#double", 
     "http://www.w3.org/2001/XMLSchema#date", "http://www.w3.org/2001/XMLSchema#dateTime", "http://www.w3.org/2001/XMLSchema#time", 

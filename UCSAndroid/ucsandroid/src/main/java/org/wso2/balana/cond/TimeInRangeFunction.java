@@ -32,7 +32,6 @@ public class TimeInRangeFunction
       return EvaluationResult.getInstance(middleTime == minTime);
     }
     long shiftSpan;
-    long shiftSpan;
     if (minTime < maxTime) {
       shiftSpan = -minTime;
     } else {

@@ -170,12 +170,12 @@ public class HigherOrderFunction
       break;
     case 5: 
       result = new EvaluationResult(BooleanAttribute.getInstance(true));
-      Iterator it = ((BagAttribute)args[0]).iterator();
-      BagAttribute bag = (BagAttribute)args[1];
-      while (it.hasNext())
+      Iterator it1 = ((BagAttribute)args[0]).iterator();
+      BagAttribute bag1 = (BagAttribute)args[1];
+      while (it1.hasNext())
       {
-        AttributeValue value = (AttributeValue)it.next();
-        result = all(value, bag, function, context);
+        AttributeValue value = (AttributeValue)it1.next();
+        result = all(value, bag1, function, context);
         if (result.indeterminate()) {
           return result;
         }

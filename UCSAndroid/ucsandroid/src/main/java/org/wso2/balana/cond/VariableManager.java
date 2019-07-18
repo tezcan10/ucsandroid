@@ -12,134 +12,124 @@ import org.wso2.balana.ParsingException;
 import org.wso2.balana.PolicyMetaData;
 import org.wso2.balana.ProcessingException;
 
-public class VariableManager
-{
-  private Map idMap;
+public class VariableManager {
+  private Map idMap = new HashMap();
   private PolicyMetaData metaData;
-  
-  public VariableManager(Map variableIds, PolicyMetaData metaData)
-  {
-    idMap = new HashMap();
-    
+
+  public VariableManager(Map variableIds, PolicyMetaData metaData) {
     Iterator it = variableIds.entrySet().iterator();
-    while (it.hasNext())
-    {
-      Object key = ((Map.Entry)it.next()).getKey();
+
+    while(it.hasNext()) {
+      Object key = ((Entry)it.next()).getKey();
       Node node = (Node)variableIds.get(key);
-      idMap.put(key, new VariableState(null, node, null, false, false));
+      this.idMap.put(key, new VariableManager.VariableState((VariableDefinition)null, node, (URI)null, false, false));
     }
+
     this.metaData = metaData;
   }
-  
-  public VariableDefinition getDefinition(String variableId)
-  {
-    VariableState state = (VariableState)idMap.get(variableId);
+
+  public VariableDefinition getDefinition(String variableId) {
+    VariableManager.VariableState state = (VariableManager.VariableState)this.idMap.get(variableId);
     if (state == null) {
       throw new ProcessingException("variable is unsupported: " + variableId);
-    }
-    if (definition != null) {
-      return definition;
-    }
-    Node node = rootNode;
-    if (node != null)
-    {
-      if (handled) {
-        throw new ProcessingException("processing in progress");
+    } else if (state.definition != null) {
+      return state.definition;
+    } else {
+      Node node = state.rootNode;
+      if (node != null) {
+        if (state.handled) {
+          throw new ProcessingException("processing in progress");
+        } else {
+          state.handled = true;
+          this.discoverApplyType(node, state);
+
+          try {
+            state.definition = VariableDefinition.getInstance(state.rootNode, this.metaData, this);
+            return state.definition;
+          } catch (ParsingException var5) {
+            throw new ProcessingException("failed to parse the definition", var5);
+          }
+        }
+      } else {
+        throw new ProcessingException("couldn't retrieve definition: " + variableId);
       }
-      handled = true;
-      discoverApplyType(node, state);
-      try
-      {
-        definition = VariableDefinition.getInstance(rootNode, metaData, this);
-        
-        return definition;
-      }
-      catch (ParsingException pe)
-      {
-        throw new ProcessingException("failed to parse the definition", pe);
-      }
     }
-    throw new ProcessingException("couldn't retrieve definition: " + variableId);
   }
-  
-  private void discoverApplyType(Node root, VariableState state)
-  {
+
+  private void discoverApplyType(Node root, VariableManager.VariableState state) {
     NodeList nodes = root.getChildNodes();
     Node xprNode = nodes.item(0);
-    int i = 1;
-    while (xprNode.getNodeType() != 1) {
-      xprNode = nodes.item(i++);
+
+    for(int var5 = 1; xprNode.getNodeType() != 1; xprNode = nodes.item(var5++)) {
     }
+
     if (xprNode.getNodeName().equals("Apply")) {
-      try
-      {
-        Function function = ExpressionHandler.getFunction(xprNode, metaData, 
-          FunctionFactory.getGeneralInstance());
-        
-        type = function.getReturnType();
-        returnsBag = function.returnsBag();
+      try {
+        Function function = ExpressionHandler.getFunction(xprNode, this.metaData, FunctionFactory.getGeneralInstance());
+        state.type = function.getReturnType();
+        state.returnsBag = function.returnsBag();
+      } catch (ParsingException var7) {
       }
-      catch (ParsingException localParsingException) {}
     }
+
   }
-  
-  public URI getVariableType(String variableId)
-  {
-    VariableState state = (VariableState)idMap.get(variableId);
+
+  public URI getVariableType(String variableId) {
+    VariableManager.VariableState state = (VariableManager.VariableState)this.idMap.get(variableId);
     if (state == null) {
       throw new ProcessingException("variable not supported: " + variableId);
+    } else if (state.type != null) {
+      return state.type;
+    } else {
+      VariableDefinition definition = state.definition;
+      if (definition == null) {
+        definition = this.getDefinition(variableId);
+      }
+
+      if (definition != null) {
+        return definition.getExpression().getType();
+      } else {
+        throw new ProcessingException("we couldn't establish the type: " + variableId);
+      }
     }
-    if (type != null) {
-      return type;
-    }
-    VariableDefinition definition = definition;
-    if (definition == null) {
-      definition = getDefinition(variableId);
-    }
-    if (definition != null) {
-      return definition.getExpression().getType();
-    }
-    throw new ProcessingException("we couldn't establish the type: " + variableId);
   }
-  
-  public boolean returnsBag(String variableId)
-  {
-    VariableState state = (VariableState)idMap.get(variableId);
+
+  public boolean returnsBag(String variableId) {
+    VariableManager.VariableState state = (VariableManager.VariableState)this.idMap.get(variableId);
     if (state == null) {
       throw new ProcessingException("variable not supported: " + variableId);
+    } else if (state.type != null) {
+      return state.returnsBag;
+    } else {
+      VariableDefinition definition = state.definition;
+      if (definition == null) {
+        definition = this.getDefinition(variableId);
+      }
+
+      if (definition != null) {
+        return definition.getExpression().returnsBag();
+      } else {
+        throw new ProcessingException("couldn't establish bag return for " + variableId);
+      }
     }
-    if (type != null) {
-      return returnsBag;
-    }
-    VariableDefinition definition = definition;
-    if (definition == null) {
-      definition = getDefinition(variableId);
-    }
-    if (definition != null) {
-      return definition.getExpression().returnsBag();
-    }
-    throw new ProcessingException("couldn't establish bag return for " + variableId);
   }
-  
-  static class VariableState
-  {
+
+  static class VariableState {
     public VariableDefinition definition;
     public Node rootNode;
     public URI type;
     public boolean returnsBag;
     public boolean handled;
-    
-    public VariableState()
-    {
-      definition = null;
-      rootNode = null;
-      type = null;
-      returnsBag = false;
-      handled = false;
+
+    public VariableState() {
+      this.definition = null;
+      this.rootNode = null;
+      this.type = null;
+      this.returnsBag = false;
+      this.handled = false;
     }
-    
-    public VariableState(VariableDefinition definition, Node rootNode, URI type, boolean returnsBag, boolean handled)
-    {
+
+    public VariableState(VariableDefinition definition, Node rootNode, URI type, boolean returnsBag, boolean handled) {
       this.definition = definition;
       this.rootNode = rootNode;
       this.type = type;
@@ -148,6 +138,7 @@ public class VariableManager
     }
   }
 }
+
 
 /* Location:
  * Qualified Name:     org.wso2.balana.cond.VariableManager

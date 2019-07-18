@@ -41,41 +41,38 @@ public class Obligation
     
     AttributeFactory attrFactory = Balana.getInstance().getAttributeFactory();
     NamedNodeMap attrs = root.getAttributes();
+    URI id;
+    String effect;
+    int fulfillOn;
     try
     {
       id = new URI(attrs.getNamedItem("ObligationId").getNodeValue());
     }
     catch (Exception e)
     {
-      URI id;
       throw new ParsingException("Error parsing required attribute ObligationId", e);
     }
-    URI id;
+
     try
     {
       effect = attrs.getNamedItem("FulfillOn").getNodeValue();
     }
     catch (Exception e)
     {
-      String effect;
       throw new ParsingException("Error parsing required attribute FulfillOn", e);
     }
-    String effect;
-    int fulfillOn;
     if (effect.equals("Permit"))
     {
       fulfillOn = 0;
     }
     else
     {
-      int fulfillOn;
       if (effect.equals("Deny")) {
         fulfillOn = 1;
       } else {
         throw new ParsingException("Invalid Effect type: " + effect);
       }
     }
-    int fulfillOn;
     NodeList nodes = root.getChildNodes();
     for (int i = 0; i < nodes.getLength(); i++)
     {

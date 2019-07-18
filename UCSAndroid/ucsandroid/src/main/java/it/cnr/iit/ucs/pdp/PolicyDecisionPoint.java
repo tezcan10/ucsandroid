@@ -100,8 +100,8 @@ public final class PolicyDecisionPoint extends AbstractPDP {
         try {
             PolicyFinder policyFinder = getPolicyFinder( policy );
             ResponseCtx responseCtx = evaluate( request.getRequest(), policyFinder );
-            journalInterface.logMultipleStrings( policy.getPolicy(), request.getRequest(), responseCtx.encode() );
-            ResponseType responseType = getResponseType( responseCtx.encode() );
+            journalInterface.logMultipleStrings( policy.getPolicy(), request.getRequest(), responseCtx.getEncoded() );
+            ResponseType responseType = getResponseType( responseCtx.getEncoded() );
             return new PDPResponse( responseType );
         } catch( Exception e ) {
             log.severe( "Error in evaluation : " + e.getMessage() );
@@ -210,7 +210,7 @@ public final class PolicyDecisionPoint extends AbstractPDP {
                 AbstractResult result = evaluateContext( ctx, policyFinder );
                 results.add( result );
             }
-            return new ResponseCtx( results, XACMLConstants.XACML_VERSION_3_0 );
+            return new ResponseCtx( results );
         } else {
             // this is a special case that specific to XACML3 request
             if( context instanceof XACML3EvaluationCtx && ( (XACML3EvaluationCtx) context ).isMultipleAttributes() ) {

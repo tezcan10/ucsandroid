@@ -76,41 +76,32 @@ public class GeneralBagFunction
     if (params == null) {
       throw new IllegalArgumentException("unknown bag function: " + functionName);
     }
-    return id;
+    return params.id;
   }
-  
-  private static String getArgumentType(String functionName)
-  {
-    return paramMapgetarg;
+
+  private static String getArgumentType(String functionName) {
+    return ((GeneralBagFunction.BagParameters)paramMap.get(functionName)).arg;
   }
-  
-  private static boolean getIsBag(String functionName)
-  {
-    return paramMapgetargIsBag;
+
+  private static boolean getIsBag(String functionName) {
+    return ((GeneralBagFunction.BagParameters)paramMap.get(functionName)).argIsBag;
   }
-  
-  private static int getNumArgs(String functionName)
-  {
-    return paramMapgetparams;
+
+  private static int getNumArgs(String functionName) {
+    return ((GeneralBagFunction.BagParameters)paramMap.get(functionName)).params;
   }
-  
-  private static String getReturnType(String functionName)
-  {
-    return paramMapgetreturnType;
+
+  private static String getReturnType(String functionName) {
+    return ((GeneralBagFunction.BagParameters)paramMap.get(functionName)).returnType;
   }
-  
-  private static boolean getReturnsBag(String functionName)
-  {
-    return paramMapgetreturnsBag;
+
+  private static boolean getReturnsBag(String functionName) {
+    return ((GeneralBagFunction.BagParameters)paramMap.get(functionName)).returnsBag;
   }
-  
-  private static String getCustomReturnType(String functionType, String datatype)
-  {
-    String ret = paramMapgetreturnType;
-    if (ret == null) {
-      return datatype;
-    }
-    return ret;
+
+  private static String getCustomReturnType(String functionType, String datatype) {
+    String ret = ((GeneralBagFunction.BagParameters)paramMap.get(functionType)).returnType;
+    return ret == null ? datatype : ret;
   }
   
   public static Set getSupportedIdentifiers()
@@ -138,9 +129,9 @@ public class GeneralBagFunction
       attrResult = (AttributeValue)bag.iterator().next();
       break;
     case 1: 
-      BagAttribute bag = (BagAttribute)argValues[0];
+      BagAttribute bag1 = (BagAttribute)argValues[0];
       
-      attrResult = new IntegerAttribute(bag.size());
+      attrResult = new IntegerAttribute(bag1.size());
       break;
     case 2: 
       List argsList = Arrays.asList(argValues);

@@ -230,7 +230,7 @@ public abstract class FunctionBase
       while (it.hasNext())
       {
         Evaluatable eval = (Evaluatable)it.next();
-        if ((!eval.getType().toString().equals(paramTypes[i])) || (paramsAreBags[i] != 0)) {
+        if ((!eval.getType().toString().equals(paramTypes[i])) || (paramsAreBags[i])) {
           throw new IllegalArgumentException("illegal parameter");
         }
         i++;

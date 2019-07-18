@@ -53,7 +53,6 @@ public class PDP
     }
     catch (ParsingException e)
     {
-      ResponseCtx responseCtx;
       logger.error("Invalid request  : " + e.getMessage());
       
       ArrayList<String> code = new ArrayList();

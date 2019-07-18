@@ -67,11 +67,11 @@ public class MultiplyFunction
       result = new EvaluationResult(new IntegerAttribute(product));
       break;
     case 1: 
-      double arg0 = ((DoubleAttribute)argValues[0]).getValue();
-      double arg1 = ((DoubleAttribute)argValues[1]).getValue();
-      double product = arg0 * arg1;
+      double double0 = ((DoubleAttribute)argValues[0]).getValue();
+      double double1 = ((DoubleAttribute)argValues[1]).getValue();
+      double product1 = double0 * double1;
       
-      result = new EvaluationResult(new DoubleAttribute(product));
+      result = new EvaluationResult(new DoubleAttribute(product1));
     }
     return result;
   }

@@ -9,7 +9,7 @@ public class PolicyMetaData
   public static final String XPATH_1_0_IDENTIFIER = "http://www.w3.org/TR/1999/Rec-xpath-19991116";
   public static final int XPATH_VERSION_UNSPECIFIED = 0;
   public static final int XPATH_VERSION_1_0 = 1;
-  private static String[] xpathIdentifiers = { 0"http://www.w3.org/TR/1999/Rec-xpath-19991116" };
+  private static String[] xpathIdentifiers = new String[]{null, "http://www.w3.org/TR/1999/Rec-xpath-19991116"};
   private int xacmlVersion;
   private int xpathVersion;
   

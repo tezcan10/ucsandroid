@@ -34,17 +34,16 @@ public class Obligation
         root.getNodeName());
     }
     NamedNodeMap nodeAttributes = root.getAttributes();
+    URI obligationId;
     try
     {
       obligationId = new URI(nodeAttributes.getNamedItem("ObligationId").getNodeValue());
     }
     catch (Exception e)
     {
-      URI obligationId;
       throw new ParsingException("Error parsing required ObligationId in ObligationType", 
         e);
     }
-    URI obligationId;
     NodeList children = root.getChildNodes();
     for (int i = 0; i < children.getLength(); i++)
     {

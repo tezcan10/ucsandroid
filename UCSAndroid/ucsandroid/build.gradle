@@ -31,8 +31,7 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'androidx.appcompat:appcompat:1.0.2'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.2.0'
@@ -41,10 +40,8 @@ dependencies {
     api 'com.fasterxml.jackson.core:jackson-annotations:2.9.8'
     api 'com.fasterxml.jackson.core:jackson-databind:2.9.8'
     api 'org.simpleframework:simple-xml:2.7.1'
-    api group: 'com.j256.ormlite', name: 'ormlite-android', version: '5.1'
-    implementation group: 'commons-logging', name: 'commons-logging', version: '1.2'
-    implementation group: 'org.apache.xerces', name: 'com.springsource.org.apache.xerces', version: '2.9.1'
-
+    api 'com.j256.ormlite:ormlite-android:5.1'
+    implementation 'commons-logging:commons-logging:1.2'
+    implementation 'org.apache.xerces:com.springsource.org.apache.xerces:2.9.1'
     // https://mvnrepository.com/artifact/org.springframework.android/spring-android-rest-template
-
 }

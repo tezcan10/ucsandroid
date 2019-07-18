@@ -61,7 +61,7 @@ public class InputParser
         factory.setValidating(true);
         
         factory.setAttribute("http://java.sun.com/xml/jaxp/properties/schemaLanguage", "http://www.w3.org/2001/XMLSchema");
-        factory.setAttribute("http://java.sun.com/xml/jaxp/properties/schemaSource", ipReferenceschemaFile);
+        factory.setAttribute("http://java.sun.com/xml/jaxp/properties/schemaSource", ipReference.schemaFile);
         
         builder = factory.newDocumentBuilder();
         builder.setErrorHandler(ipReference);

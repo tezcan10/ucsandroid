@@ -37,17 +37,17 @@ public class Advice
         root.getNodeName());
     }
     NamedNodeMap nodeAttributes = root.getAttributes();
+    URI adviceId;
     try
     {
       adviceId = new URI(nodeAttributes.getNamedItem("AdviceId").getNodeValue());
     }
     catch (Exception e)
     {
-      URI adviceId;
+
       throw new ParsingException("Error parsing required AdviceId in AdviceType", 
         e);
     }
-    URI adviceId;
     NodeList children = root.getChildNodes();
     for (int i = 0; i < children.getLength(); i++)
     {

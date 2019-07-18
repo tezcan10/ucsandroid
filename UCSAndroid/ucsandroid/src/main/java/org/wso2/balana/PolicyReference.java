@@ -63,30 +63,28 @@ public class PolicyReference
   {
     String name = root.getNodeName();
     int policyType;
+    URI reference;
     if (name.equals("PolicyIdReference"))
     {
       policyType = 0;
     }
     else
     {
-      int policyType;
       if (name.equals("PolicySetIdReference")) {
         policyType = 1;
       } else {
         throw new ParsingException("Unknown reference type: " + name);
       }
     }
-    int policyType;
     try
     {
       reference = new URI(root.getFirstChild().getNodeValue());
     }
     catch (Exception e)
     {
-      URI reference;
+
       throw new ParsingException("Invalid URI in Reference", e);
     }
-    URI reference;
     NamedNodeMap map = root.getAttributes();
     
     String versionConstraint = null;

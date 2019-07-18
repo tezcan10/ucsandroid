@@ -43,17 +43,16 @@ public class Attributes
         root.getNodeName());
     }
     NamedNodeMap attrs = root.getAttributes();
+    URI category;
     try
     {
       category = new URI(attrs.getNamedItem("Category").getNodeValue());
     }
     catch (Exception e)
     {
-      URI category;
       throw new ParsingException("Error parsing required attribute AttributeId in AttributesType", 
         e);
     }
-    URI category;
     try
     {
       Node idNode = attrs.getNamedItem("id");

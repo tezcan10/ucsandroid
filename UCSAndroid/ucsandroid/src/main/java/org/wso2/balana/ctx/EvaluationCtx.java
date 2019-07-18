@@ -9,6 +9,7 @@ import org.wso2.balana.cond.EvaluationResult;
 import org.wso2.balana.xacml3.MultipleCtxResult;
 
 public abstract interface EvaluationCtx
+
 {
   public abstract Node getRequestRoot();
   

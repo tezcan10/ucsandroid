@@ -33,43 +33,39 @@ public class AdviceExpression
   {
     List<AttributeAssignmentExpression> expressions = new ArrayList();
     NamedNodeMap attrs = root.getAttributes();
+    URI adviceId;
+    String effect;
+    int appliesTo;
     try
     {
       adviceId = new URI(attrs.getNamedItem("AdviceId").getNodeValue());
     }
     catch (Exception e)
     {
-      URI adviceId;
       throw new ParsingException("Error parsing required attribute AdviceId in AdviceExpressionType", 
         e);
     }
-    URI adviceId;
     try
     {
       effect = attrs.getNamedItem("AppliesTo").getNodeValue();
     }
     catch (Exception e)
     {
-      String effect;
       throw new ParsingException("Error parsing required attribute AppliesTo in AdviceExpressionType", 
         e);
     }
-    String effect;
-    int appliesTo;
     if (effect.equals("Permit"))
     {
       appliesTo = 0;
     }
     else
     {
-      int appliesTo;
       if (effect.equals("Deny")) {
         appliesTo = 1;
       } else {
         throw new ParsingException("Invalid Effect type: " + effect);
       }
     }
-    int appliesTo;
     NodeList nodes = root.getChildNodes();
     for (int i = 0; i < nodes.getLength(); i++)
     {

@@ -66,10 +66,10 @@ public class AbsFunction
       result = new EvaluationResult(new IntegerAttribute(absValue));
       break;
     case 1: 
-      double arg = ((DoubleAttribute)argValues[0]).getValue();
-      double absValue = Math.abs(arg);
+      double arg1 = ((DoubleAttribute)argValues[0]).getValue();
+      double absValue1 = Math.abs(arg1);
       
-      result = new EvaluationResult(new DoubleAttribute(absValue));
+      result = new EvaluationResult(new DoubleAttribute(absValue1));
     }
     return result;
   }

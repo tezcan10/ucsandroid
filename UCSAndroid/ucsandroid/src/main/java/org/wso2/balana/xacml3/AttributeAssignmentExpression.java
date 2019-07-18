@@ -46,17 +46,16 @@ public class AttributeAssignmentExpression
         root.getNodeName());
     }
     NamedNodeMap nodeAttributes = root.getAttributes();
+    URI attributeId;
     try
     {
       attributeId = new URI(nodeAttributes.getNamedItem("AttributeId").getNodeValue());
     }
     catch (Exception e)
     {
-      URI attributeId;
-      throw new ParsingException("Error parsing required AttributeId in AttributeAssignmentExpressionType", 
+      throw new ParsingException("Error parsing required AttributeId in AttributeAssignmentExpressionType",
         e);
     }
-    URI attributeId;
     try
     {
       Node categoryNode = nodeAttributes.getNamedItem("Category");

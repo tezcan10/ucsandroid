@@ -69,13 +69,13 @@ public class NumericConvertFunction
     {
     case 0: 
       double arg0 = ((DoubleAttribute)argValues[0]).getValue();
-      long longValue = arg0;
+      long longValue = (long)arg0;
       
       result = new EvaluationResult(new IntegerAttribute(longValue));
       break;
     case 1: 
-      long arg0 = ((IntegerAttribute)argValues[0]).getValue();
-      double doubleValue = arg0;
+      long arg1 = ((IntegerAttribute)argValues[0]).getValue();
+      double doubleValue = arg1;
       
       result = new EvaluationResult(new DoubleAttribute(doubleValue));
     }
